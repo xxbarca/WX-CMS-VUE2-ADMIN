@@ -94,6 +94,7 @@
     import Banner from '../../model/banner'
     import UploadImgs from '@/component/base/upload-image'
 	import BannerItemEdit from './banner-item-edit'
+    import BannerItem from '../../model/banner-item'
 
     export default {
         name: 'banner-modify',
@@ -147,7 +148,22 @@
                 this.editID = row.id
                 this.showEdit = true
 			},
-            handleDelete() {},
+            handleDelete(row) {
+                this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    const res = await BannerItem.deleteBannerItem(row.id)
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        await this.getDetail()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    }
+                })
+			},
 			// 添加bannerItem
             addBannerItem() {},
             editClose() {
