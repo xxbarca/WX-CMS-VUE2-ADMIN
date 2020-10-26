@@ -1,5 +1,5 @@
 <template>
-	<div class="container">
+	<div class="container" v-if="!showEdit">
 		<div class="title">
 			<span>修改Banner</span> <span class="back" @click="back"> <i class="iconfont icon-fanhui"></i> 返回 </span>
 		</div>
@@ -81,16 +81,25 @@
 <!--			</el-form>-->
 <!--		</div>-->
 	</div>
+	<BannerItemEdit
+			v-else
+			@editClose="editClose"
+			:bannerId="bannerId"
+			:isCreate="isCreate"
+			:editID="editID"
+	></BannerItemEdit>
 </template>
 
 <script>
     import Banner from '../../model/banner'
     import UploadImgs from '@/component/base/upload-image'
+	import BannerItemEdit from './banner-item-edit'
 
     export default {
         name: 'banner-modify',
         components: {
             UploadImgs,
+			BannerItemEdit
         },
 		props: {
             bannerId: {
@@ -108,7 +117,9 @@
                 initData: [],
                 bannerItems: [],
                 imgSrcList: [],
-
+                showEdit: false,
+                isCreate: false,
+                editID: 0,
 			}
 		},
 		methods: {
@@ -131,10 +142,18 @@
                     this.$emit('detailClose')
                 }
 			},
-            handleEdit() {},
+            handleEdit(row) {
+                this.isCreate = false
+                this.editID = row.id
+                this.showEdit = true
+			},
             handleDelete() {},
 			// 添加bannerItem
             addBannerItem() {},
+            editClose() {
+                this.showEdit = false
+                this.getDetail()
+			},
 			// 重置
             resetForm(formName) {
                 this.$refs[formName].resetFields()
