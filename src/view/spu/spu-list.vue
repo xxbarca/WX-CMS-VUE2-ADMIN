@@ -45,14 +45,17 @@
 				></el-pagination>
 			</div>
 		</div>
+		<spu-edit v-else @editClose="editClose" :spuId="spuId" :isCreate="isCreate"></spu-edit>
 	</div>
 </template>
 
 <script>
     import Spu from '../../model/spu'
+	import SpuEdit from './spu-edit'
 
     export default {
         name: 'spu-list',
+		components: {SpuEdit},
 		data() {
             return {
                 spuId: null,
@@ -80,9 +83,12 @@
                 this.totalNums = spus.total
                 this.initImgSrcList()
                 this.loading = false
-
             },
-            handleEdit(row) {},
+            handleEdit(val) {
+                this.isCreate = false
+                this.spuId = `${val.id}`
+                this.showEdit = true
+            },
             handleDelete(val) {
                 this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
                     confirmButtonText: '确定',
@@ -100,6 +106,10 @@
                 })
 			},
             addSpu() {},
+            editClose() {
+                this.showEdit = false
+                this.getSpus()
+			},
             initImgSrcList() {
                 this.tableData.forEach(item => {
                     if (!item.img) {
