@@ -20,7 +20,7 @@
 				</el-table-column>
 			</el-table>
 		</div>
-		<BannerDetail v-else @handleOnClose="handleOnClose" :banner-id="bannerId" />
+		<BannerDetail v-else @detailClose="handleOnClose" :banner-id="bannerId" />
 	</div>
 </template>
 

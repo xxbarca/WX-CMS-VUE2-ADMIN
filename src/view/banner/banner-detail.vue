@@ -34,6 +34,42 @@
 				</el-col>
 			</el-row>
 		</div>
+		<div>
+			<el-divider></el-divider>
+			<div class="header">
+				<div class="title">
+					<span>Banner-Item列表</span>
+					<el-button @click.prevent="addBannerItem" class="add-btn" type="primary" plain>新增Banner-Item</el-button>
+				</div>
+			</div>
+			<el-row class="inner-container">
+				<el-table stripe :data="bannerItems">
+					<el-table-column prop="id" label="id" width="100"></el-table-column>
+					<el-table-column prop="img" label="图片" width="200">
+						<template v-if="scope.row.img" slot-scope="scope">
+							<el-image :src="scope.row.img" :preview-src-list="imgSrcList" style="max-height: 50px; max-width: 100px;">
+							</el-image>
+						</template>
+					</el-table-column>
+					<el-table-column prop="name" label="名称" width="150"></el-table-column>
+					<el-table-column prop="keyword" label="关键字" min-width="200"></el-table-column>
+					<el-table-column prop="type" label="类型" width="150"></el-table-column>
+					<el-table-column fixed="right" width="150" label="操作">
+						<template slot-scope="scope">
+							<el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+							<el-button
+									@click.prevent="handleDelete(scope.row)"
+									type="danger"
+									plain
+									size="mini"
+									v-permission="{ permission: '删除Banner item', type: 'disabled' }"
+							>删除</el-button
+							>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-row>
+		</div>
 <!--		<div class="form-container">-->
 <!--			<el-form label-width="80px">-->
 <!--				<el-form-item label="名称">-->
@@ -70,12 +106,14 @@
                 },
                 mainMaxNum: 1,
                 initData: [],
-                bannerItems: []
+                bannerItems: [],
+                imgSrcList: [],
+
 			}
 		},
 		methods: {
             back() {
-                this.$emit('handleOnClose')
+                this.$emit('detailClose')
 			},
             async getValue() {
                 const val = await this.$refs.uploadEle.getValue()
@@ -88,7 +126,15 @@
                 const form = { ...this.form }
                 const res = await Banner.editBanner(this.bannerId, form)
 				console.log(res)
+                if (res.code < window.MAX_SUCCESS_CODE) {
+                    this.$message.success(`${res.message}`)
+                    this.$emit('detailClose')
+                }
 			},
+            handleEdit() {},
+            handleDelete() {},
+			// 添加bannerItem
+            addBannerItem() {},
 			// 重置
             resetForm(formName) {
                 this.$refs[formName].resetFields()
@@ -98,7 +144,16 @@
                 this.form = res
                 this.initData = [{ id: res.id, display: res.img }]
                 this.bannerItems = res.items
-			}
+				this.initImgSrcList()
+			},
+            initImgSrcList() {
+                this.bannerItems.forEach(item => {
+                    if (!item.img) {
+                        return
+                    }
+                    this.imgSrcList.push(item.img)
+                })
+            },
 		},
 		async mounted() {
             await this.getDetail()
