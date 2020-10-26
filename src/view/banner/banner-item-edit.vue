@@ -90,7 +90,6 @@
                 let res
                 if (this.isCreate) {
                     form.banner_id = this.bannerId
-					console.log(form)
                     res = await BannerItem.addBannerItem(form)
                 } else {
                     res = await BannerItem.editBannerItem(this.editID, form)

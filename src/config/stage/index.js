@@ -2,7 +2,8 @@ import adminConfig from './admin'
 import bookConfig from './book' // 引入图书管理路由文件
 import sleeveConfig from './sleeve'
 import pluginsConfig from './plugin'
-import bannerRouter from './banner'
+import bannerConfig from './banner'
+import spuConfig from './spu'
 import Utils from '@/lin/util/util'
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -49,7 +50,8 @@ let homeRouter = [
   bookConfig,
   adminConfig,
     sleeveConfig,
-    bannerRouter
+    bannerConfig,
+    spuConfig
 ]
 
 const plugins = [...pluginsConfig]
