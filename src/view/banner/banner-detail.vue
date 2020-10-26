@@ -165,7 +165,11 @@
                 })
 			},
 			// 添加bannerItem
-            addBannerItem() {},
+            addBannerItem() {
+                this.isCreate = true
+                this.editID = 0
+                this.showEdit = true
+			},
             editClose() {
                 this.showEdit = false
                 this.getDetail()
