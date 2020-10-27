@@ -66,6 +66,16 @@
 										inactive-text="下架"
 								></el-switch>
 							</el-form-item>
+							<el-form-item label="主图" prop="img">
+								<el-tooltip
+										class="item"
+										effect="dark"
+										content="主图可以选择不上传，默认选择轮播图的第一张为主图"
+										placement="top-start"
+								>
+									<upload-imgs multiple :max-num="mainMaxNun" ref="uploadEle" :value="initData" />
+								</el-tooltip>
+							</el-form-item>
 							<el-form-item label="主题图" prop="for_theme_img">
 								<UploadImgs :max-num="mainMaxNun" ref="uploadThmeEle" :value="initThemeData" />
 							</el-form-item>
@@ -100,6 +110,15 @@
 
 							<el-form-item label="描述" prop="description">
 								<el-input size="medium" v-model="form.description" placeholder="请填写描述"></el-input>
+							</el-form-item>
+							<el-form-item class="submit">
+								<el-button
+										v-permission="{ permission: ['创建SPU', '更新SPU'], type: 'disabled' }"
+										type="primary"
+										@click="submitForm('form')"
+								>保 存</el-button
+								>
+								<el-button @click="resetForm('form')">重 置</el-button>
 							</el-form-item>
 						</el-form>
 					</el-col>
@@ -150,6 +169,7 @@
                     spu_detail_img_list: null,
                 },
                 dynamicTags: [],
+                initData: [],
                 categorySuggestions: [],
                 specKeySuggestions: [],
                 skuSuggestions: [],
@@ -208,9 +228,7 @@
                 this.categoryState = res.category_name
                 this.skuState = res.default_sku_title
                 const hitSpecKeys = await Spu.getSpecKeys(this.spuId)
-				console.log(hitSpecKeys)
                 this.specs = hitSpecKeys.map(item => [item])
-				console.log(this.specs)
                 this.dynamicTags = res.tags ? res.tags.split('$') : []
 			}
         },
@@ -220,6 +238,52 @@
             },
         },
 		methods: {
+            async submitForm(formName) {
+                await this.getValue()
+                const postData = { ...this.form }
+                const tags = this.dynamicTags.join('$')
+                postData.spec_key_id_list = this.specs.map(spec => spec[0])
+                postData.tags = tags
+                let res
+                if (this.isCreate) {
+                    res = await Spu.addSpu(postData)
+                } else {
+                    res = await Spu.editSpu(this.spuId, postData)
+                }
+                if (res.code < window.MAX_SUCCESS_CODE) {
+                    this.$message.success(`${res.message}`)
+                    // this.resetForm(formName)
+                    this.$confirm('是否返回上一页', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning',
+                    }).then(async () => {
+                        this.$emit('editClose')
+                    })
+                }
+			},
+            async getValue() {
+                const val = await this.$refs.uploadEle.getValue()
+                if (val && val.length > 0) {
+                    this.form.img = val[0].display
+                }
+                const val3 = await this.$refs.uploadThmeEle.getValue()
+                if (val3 && val3.length > 0) {
+                    this.form.for_theme_img = val3[0].display
+                }
+                const val1 = await this.$refs.uploadBannerEle.getValue()
+                if (val1 && val1.length > 0) {
+                    this.form.spu_img_list = val1.map(it => it.display)
+                }
+                const val2 = await this.$refs.uploadDetailEle.getValue()
+                if (val2 && val2.length > 0) {
+                    this.form.spu_detail_img_list = val2.map(it => it.display)
+                }
+            },
+            // 重置表单
+            resetForm(formName) {
+                this.$refs[formName].resetFields()
+            },
             back() {
                 this.$emit('editClose')
 			},
