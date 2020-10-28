@@ -244,6 +244,7 @@
                 const tags = this.dynamicTags.join('$')
                 postData.spec_key_id_list = this.specs.map(spec => spec[0])
                 postData.tags = tags
+				console.log(postData)
                 let res
                 if (this.isCreate) {
                     res = await Spu.addSpu(postData)

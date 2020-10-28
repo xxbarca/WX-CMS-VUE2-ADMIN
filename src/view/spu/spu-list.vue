@@ -105,7 +105,11 @@
                     }
                 })
 			},
-            addSpu() {},
+            addSpu() {
+                this.isCreate = true
+                this.spuId = null
+                this.showEdit = true
+			},
             editClose() {
                 this.showEdit = false
                 this.getSpus()
