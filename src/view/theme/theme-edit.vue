@@ -133,6 +133,7 @@
                     minHeight: 10,
                     maxSize: 5,
                 },
+				loading: false,
                 onlined: true,
                 maxNum: 1,
                 initImgData: [],
@@ -187,7 +188,18 @@
                     this.form.internal_top_img = val2[0].display
                 }
             },
-            handleDelete() {},
+            async handleDelete(row) {
+                try {
+                    const res = await Theme.deleteSpu(row.tid)
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        this.$message.success(`${res.message}`)
+                        await this.getSpus(this.form.id)
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+
+			},
             async getSpus(id) {
                 const spus = await Theme.getSpus(id)
                 this.tableData = spus
