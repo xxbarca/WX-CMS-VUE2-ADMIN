@@ -216,7 +216,21 @@
                     this.form.internal_top_img = val2[0].display
                 }
             },
-            addThemeSpu() {},
+            async addThemeSpu() {
+                const info = { theme_id: this.form.id, spu_id: this.spuId }
+                try {
+                    const res = await Theme.addThemeSpu(info)
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        this.$message.success(`${res.message}`)
+                        await this.getSpus(this.form.id)
+                        this.spuId = null
+                        this.spuState = ''
+                    }
+                } catch (error) {
+                    console.error(error)
+                }
+                console.log(info)
+			},
             async handleDelete(row) {
                 try {
                     const res = await Theme.deleteSpu(row.tid)
