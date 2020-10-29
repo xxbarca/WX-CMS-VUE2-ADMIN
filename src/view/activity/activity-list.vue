@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="container">
+		<div class="container" v-if="!showEdit">
 			<div class="header">
 				<div class="title">活动列表</div>
 				<el-button style="margin-left:30px;" @click.prevent="addActivity" type="primary" plain size="medium">
@@ -52,15 +52,31 @@
 					</template>
 				</el-table-column>
 			</el-table>
+			<div class="pagination">
+				<el-pagination
+						@current-change="handleCurrentChange"
+						:background="true"
+						:page-size="pageCount"
+						:current-page="currentPage"
+						v-if="refreshPagination"
+						layout="prev, pager, next, jumper"
+						:total="totalNums"
+				></el-pagination>
+			</div>
 		</div>
+		<ActivityEdit v-else @editClose="editClose" :activityId="activityId" :isCreate="isCreate"></ActivityEdit>
 	</div>
 </template>
 
 <script>
     import Activity from '../../model/Activity'
+	import ActivityEdit from './activity-edit'
 	import dayjs from 'dayjs'
     export default {
         name: 'activity-list',
+		components: {
+            ActivityEdit
+		},
 		data() {
             return {
                 activityId: null,
@@ -93,8 +109,21 @@
 			}
         },
         methods: {
-            handleEdit() {},
+            editClose() {
+                this.showEdit = false
+                this.getActivities()
+			},
+            handleEdit(val) {
+                this.isCreate = false
+                this.activityId = `${val.id}`
+                this.showEdit = true
+            },
             handleDelete() {},
+            async handleCurrentChange(val) {
+                this.currentPage = val
+                this.loading = true
+                await this.getActivities()
+            },
             async getActivities() {
                 const page = this.currentPage - 1
                 const count = this.pageCount
