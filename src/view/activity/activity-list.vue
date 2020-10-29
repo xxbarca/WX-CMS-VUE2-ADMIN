@@ -134,7 +134,11 @@
 
                 console.log(activities)
 			},
-            addActivity() {}
+            addActivity() {
+                this.isCreate = true
+                this.activityId = null
+                this.showEdit = true
+			}
 		}
     }
 </script>

@@ -176,12 +176,18 @@
                 await this.getValue()
 				try {
                     const postData = { ...this.form }
-                    postData.coupon_ids = this.couponIds.map(it => it[0])
+
+                    postData.coupon_ids = Array.isArray(this.couponIds) ? this.couponIds.map(it => it[0]) : []
+
                     postData.start_time = this.dateFormat(this.range[0])
                     postData.end_time = this.dateFormat(this.range[1])
-					console.log(postData)
+
                     let res
-                    if (this.isCreate) {
+
+
+                    if (this.isCreate === true) {
+                        console.log(postData)
+                        console.log(this.couponIds)
                         res = await Activity.addActivity(postData)
                     } else {
                         res = await Activity.editActivity(
@@ -201,7 +207,6 @@
                         })
                     }
                 } catch(e) {
-                    console.log(e)
 				}
 			},
             async getValue() {
