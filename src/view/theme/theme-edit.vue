@@ -91,6 +91,31 @@
 							</template>
 						</el-table-column>
 					</el-table>
+					<div class="complete">
+						<el-autocomplete
+								@focus="loadSpuSuggestions"
+								popper-class="my-autocomplete"
+								class="inline-input"
+								v-model="spuState"
+								:fetch-suggestions="querySpuSearch"
+								placeholder="添加SPU"
+								@select="handleSpuSelect"
+						>
+							<template slot-scope="{ item }">
+								<span class="id">{{ item.id }}</span>
+								<span class="name">{{ item.title }}</span>
+							</template>
+						</el-autocomplete>
+						<el-button
+								v-permission="{ permission: ['添加主题下的spu'], type: 'disabled' }"
+								class="add"
+								@click.prevent="addThemeSpu"
+								type="primary"
+								plain
+								size="medium"
+						>添加</el-button
+						>
+					</div>
 				</el-row>
 			</div>
 		</div>
@@ -133,6 +158,7 @@
                     minHeight: 10,
                     maxSize: 5,
                 },
+                spuState: '',
 				loading: false,
                 onlined: true,
                 maxNum: 1,
@@ -140,6 +166,8 @@
                 initEntranceData: [],
                 initInternalData: [],
                 tableData: [],
+                spuSuggestions: [],
+                spuId: '',
                 tpl_options: ['diana', 'irelia', 'camille', 'janna', 'spu-list'],
 			}
 		},
@@ -188,6 +216,7 @@
                     this.form.internal_top_img = val2[0].display
                 }
             },
+            addThemeSpu() {},
             async handleDelete(row) {
                 try {
                     const res = await Theme.deleteSpu(row.tid)
@@ -203,7 +232,39 @@
             async getSpus(id) {
                 const spus = await Theme.getSpus(id)
                 this.tableData = spus
-            }
+            },
+            querySpuSearch(queryString, cb) {
+                // eslint-disable-next-line
+                const suggestions = this.spuSuggestions
+                const results = queryString ? suggestions.filter(this.createSpuFilter(queryString)) : suggestions
+                cb(results)
+            },
+            createSpuFilter(queryString) {
+                // eslint-disable-next-line
+                return suggestion => {
+                    return suggestion.title.toLowerCase().indexOf(queryString.toLowerCase()) === 0
+                }
+            },
+            handleSpuSelect(item) {
+                this.spuState = item.title
+                this.spuId = item.id
+            },
+            async loadSpuSuggestions() {
+                if (this.spuSuggestions.length > 0) {
+                    return
+                }
+                try {
+                    if (!this.isCreate) {
+                        this.spuSuggestions = await Theme.getSpuList(this.form.id)
+                        if (this.spuSuggestions.length === 0) {
+                            this.$message.error('未找到SPU建议，请先添加SPU')
+                        }
+                    }
+                } catch (error) {
+                    this.$message.error('获取SPU建议信息失败')
+                    console.error(error)
+                }
+			},
 		},
         watch: {
             onlined(val) {
