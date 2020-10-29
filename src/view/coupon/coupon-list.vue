@@ -150,7 +150,12 @@
                     }
                 })
 			},
-            addCoupon() {},
+            addCoupon(templateData) {
+                this.templateData = templateData
+                this.isCreate = true
+                this.couponId = null
+                this.showEdit = true
+            },
             editClose() {
                 this.showEdit = false
                 this.getCoupons()

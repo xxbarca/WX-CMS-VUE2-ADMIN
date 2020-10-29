@@ -143,7 +143,7 @@
                 const start = new Date(res.start_time)
                 this.range = [start, end]
             } else {
-
+				this.form = this.templateData
             }
 		},
 		methods: {
