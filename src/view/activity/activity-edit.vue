@@ -66,6 +66,7 @@
 					</el-col>
 				</el-row>
 			</div>
+			<CouponList v-if="!isCreate" :activity-id="activityId"  />
 		</div>
 	</div>
 </template>
@@ -73,12 +74,14 @@
 <script>
     import Activity from '../../model/Activity'
     import UploadImgs from '@/component/base/upload-image'
+	import CouponList from '../coupon/coupon-list'
 	import dayjs from 'dayjs'
 
     export default {
         name: 'activity-edit',
 		components: {
-            UploadImgs
+            UploadImgs,
+			CouponList
 		},
 		data() {
             return {

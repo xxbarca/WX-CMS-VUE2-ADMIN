@@ -131,8 +131,6 @@
                 this.tableData = activities.items
                 this.totalNums = activities.total
                 this.loading = false
-
-                console.log(activities)
 			},
             addActivity() {
                 this.isCreate = true
