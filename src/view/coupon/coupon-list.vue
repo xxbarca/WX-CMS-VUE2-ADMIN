@@ -134,7 +134,22 @@
                 this.couponId = `${val.id}`
                 this.showEdit = true
             },
-            handleDelete() {},
+            handleDelete(val) {
+                this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    const res = await Coupon.deleteCoupon(val.id)
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        await this.getCoupons()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    }
+                })
+			},
             addCoupon() {},
             editClose() {
                 this.showEdit = false
