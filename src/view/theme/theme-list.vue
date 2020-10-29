@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<div class="container">
+		<div v-if="!showEdit" class="container">
 			<div class="header">
 				<div class="title">主题列表</div>
 				<el-button style="margin-left:30px;" @click.prevent="addTheme" type="primary" plain size="medium">添加主题</el-button>
@@ -67,14 +67,19 @@
 				></el-pagination>
 			</div>
 		</div>
+		<ThemeEdit v-else @editClose="editClose" :themeId="themeId" :isCreate="isCreate" />
 	</div>
 </template>
 
 <script>
     import Theme from '../../model/theme'
+	import ThemeEdit from './theme-edit'
 
     export default {
         name: 'theme-list',
+		components: {
+            ThemeEdit
+		},
         data() {
             return {
                 themeId: null,
@@ -87,6 +92,7 @@
                 totalNums: 0,
                 currentPage: 1,
                 pageCount: 10,
+                loading: false,
                 refreshPagination: true, // 页数增加的时候，因为缓存的缘故，需要刷新Pagination组件
             }
         },
@@ -95,7 +101,15 @@
             await this.getThemes()
 		},
 		methods: {
-            handleEdit() {},
+            handleEdit(val) {
+                this.isCreate = false
+                this.themeId = `${val.id}`
+                this.showEdit = true
+            },
+            editClose() {
+                this.showEdit = false
+                this.getThemes()
+			},
             handleDelete() {},
             async getThemes() {
                 const page = this.currentPage - 1
@@ -131,8 +145,10 @@
 
 			},
             addTheme() {
-
-			}
+                this.isCreate = true
+                this.themeId = null
+                this.showEdit = true
+            },
 		}
     }
 </script>
