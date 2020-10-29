@@ -41,16 +41,55 @@
 					</template>
 				</el-table-column>
 			</el-table>
+
+			<div class="header">
+				<div class="title">优惠卷模板列表</div>
+				<!-- <el-button @click.prevent="addCoupon" type="primary" plain size="medium">添加优惠卷</el-button> -->
+			</div>
+			<el-table stripe v-loading="loading" :data="templates">
+				<el-table-column prop="id" label="id" width="100"></el-table-column>
+				<el-table-column prop="title" label="名称" width="250"></el-table-column>
+				<el-table-column prop="full_money" label="满减额" width="150"></el-table-column>
+				<el-table-column prop="minus" label="优惠额" width="150"></el-table-column>
+				<el-table-column prop="discount" label="折扣" width="150"></el-table-column>
+				<el-table-column prop="type" label="类型" width="150">
+					<template slot-scope="scope">{{ scope.row.type | typeFormat }}</template>
+				</el-table-column>
+				<el-table-column prop="description" label="描述" min-width="300"></el-table-column>
+				<el-table-column fixed="right" width="300" label="操作">
+					<template slot-scope="scope">
+						<el-button
+								v-permission="{ permission: ['创建优惠卷'], type: 'disabled' }"
+								@click.prevent="addCoupon(scope.row)"
+								type="primary"
+								plain
+								size="mini"
+						>从当前模板创建</el-button
+						>
+					</template>
+				</el-table-column>
+			</el-table>
 		</div>
+		<CouponEdit v-else
+					@editClose="editClose"
+					:templateData="templateData"
+					:couponId="couponId"
+					:isCreate="isCreate"
+					:activityId="activityId"
+		/>
 	</div>
 </template>
 
 <script>
     import Coupon from '../../model/coupon'
 	import dayjs from 'dayjs'
+	import CouponEdit from './coupon-edit'
 
     export default {
         name: 'coupon-list',
+		components: {
+            CouponEdit
+		},
         props: {
             activityId: {
                 type: String,
@@ -76,7 +115,8 @@
             this.$nextTick(() => {
                 this.loading = true
                 this.getCoupons()
-                // this.getTemplates()
+                this.getTemplates()
+                this.loading = false
             })
 
 		},
@@ -84,10 +124,22 @@
             async getCoupons() {
                 const coupons = await Coupon.getListByActivityId(this.activityId)
                 this.tableData = coupons
-                this.loading = false
             },
-            handleEdit() {},
-            handleDelete() {}
+            async getTemplates() {
+                const templates = await Coupon.getCouponTemplates()
+                this.templates = templates
+            },
+            handleEdit(val) {
+                this.isCreate = false
+                this.couponId = `${val.id}`
+                this.showEdit = true
+            },
+            handleDelete() {},
+            addCoupon() {},
+            editClose() {
+                this.showEdit = false
+                this.getCoupons()
+			}
 		},
         filters: {
             dateFormat(val) {

@@ -179,15 +179,10 @@
                 await this.getValue()
 				try {
                     const postData = { ...this.form }
-
                     postData.coupon_ids = Array.isArray(this.couponIds) ? this.couponIds.map(it => it[0]) : []
-
                     postData.start_time = this.dateFormat(this.range[0])
                     postData.end_time = this.dateFormat(this.range[1])
-
                     let res
-
-
                     if (this.isCreate === true) {
                         console.log(postData)
                         console.log(this.couponIds)
