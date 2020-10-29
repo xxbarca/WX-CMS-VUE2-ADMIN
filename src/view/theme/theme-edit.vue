@@ -64,6 +64,35 @@
 					</el-col>
 				</el-row>
 			</div>
+			<div v-if="!isCreate" class="title plus">
+				<span>主题下的SPU</span>
+			</div>
+			<div v-if="!isCreate" class="wrap">
+				<el-row>
+					<el-table stripe v-loading="loading" :data="tableData">
+						<el-table-column prop="id" fixed="left" label="id" width="100"></el-table-column>
+						<el-table-column prop="img" label="主图" width="200">
+							<template v-if="scope.row.img" slot-scope="scope">
+								<img class="display_img" :src="scope.row.img" :alt="scope.row.img" />
+							</template>
+						</el-table-column>
+						<el-table-column prop="title" label="标题" width="150"></el-table-column>
+						<el-table-column prop="subtitle" label="副标题" min-width="300"></el-table-column>
+						<el-table-column fixed="right" width="150" label="操作">
+							<template slot-scope="scope">
+								<el-button
+										v-permission="{ permission: ['删除主题下的spu'], type: 'disabled' }"
+										@click.prevent="handleDelete(scope.row)"
+										type="danger"
+										size="mini"
+										plain
+								>删除</el-button
+								>
+							</template>
+						</el-table-column>
+					</el-table>
+				</el-row>
+			</div>
 		</div>
 	</div>
 </template>
@@ -109,6 +138,7 @@
                 initImgData: [],
                 initEntranceData: [],
                 initInternalData: [],
+                tableData: [],
                 tpl_options: ['diana', 'irelia', 'camille', 'janna', 'spu-list'],
 			}
 		},
@@ -157,6 +187,11 @@
                     this.form.internal_top_img = val2[0].display
                 }
             },
+            handleDelete() {},
+            async getSpus(id) {
+                const spus = await Theme.getSpus(id)
+                this.tableData = spus
+            }
 		},
         watch: {
             onlined(val) {
@@ -185,6 +220,7 @@
                         display: res.internal_top_img,
                     },
                 ]
+                await this.getSpus(res.id)
 			}
         }
     }

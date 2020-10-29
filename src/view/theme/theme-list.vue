@@ -156,9 +156,13 @@
                     this.internalTopImgSrcList.push(item.internal_top_img)
                 })
             },
-            handleCurrentChange(val) {
-
-			},
+            async handleCurrentChange(val) {
+                this.titleImgSrcList = []
+                this.entranceImgSrcList = []
+                this.internalTopImgSrcList = []
+                this.currentPage = val
+                await this.getThemes()
+            },
             addTheme() {
                 this.isCreate = true
                 this.themeId = null
