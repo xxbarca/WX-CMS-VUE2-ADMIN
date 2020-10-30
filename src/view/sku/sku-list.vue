@@ -50,14 +50,19 @@
 				></el-pagination>
 			</div>
 		</div>
+		<sku-edit v-else @editClose="editClose" :skuId="skuId" :isCreate="isCreate"></sku-edit>
 	</div>
 </template>
 
 <script>
     import Sku from '../../model/Sku'
+    import SkuEdit from './sku-edit'
 
     export default {
         name: 'sku-list',
+		components: {
+		    SkuEdit
+		},
 		data() {
             return {
                 skuId: null,
@@ -81,8 +86,20 @@
             },
         },
 		methods: {
-            addSku() {},
-            handleEdit() {},
+            addSku() {
+                this.isCreate = true
+                this.skuId = null
+                this.showEdit = true
+			},
+            editClose() {
+                this.showEdit = false
+                this.getSkus()
+			},
+            handleEdit(val) {
+                this.isCreate = false
+                this.skuId = `${val.id}`
+                this.showEdit = true
+            },
             handleDelete(val) {
                 this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
                     confirmButtonText: '确定',

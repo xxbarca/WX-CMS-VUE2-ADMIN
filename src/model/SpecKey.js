@@ -7,22 +7,22 @@ class SpecKey {
     }
     
     static async getSpecKey(id) {
-        const res = await get(`v1/spec-key/${id}`)
+        const res = await get(`/v1/spec-key/${id}`)
         return res
     }
     
     static async getSpecKeyDetail(id) {
-        const res = await get(`v1/spec-key/${id}/detail`)
+        const res = await get(`/v1/spec-key/${id}/detail`)
         return res
     }
     
     static async editSpecKey(id, data) {
-        const res = await put(`v1/spec-key/${id}`, data)
+        const res = await put(`/v1/spec-key/${id}`, data)
         return res
     }
     
     static async deleteSpecKey(id) {
-        const res = await _delete(`v1/spec-key/${id}`)
+        const res = await _delete(`/v1/spec-key/${id}`)
         return res
     }
     
@@ -40,7 +40,7 @@ class SpecKey {
     }
     
     static async getBySpuId(spuId) {
-        const res = await get(`v1/spec-key/by/spu/${spuId}`)
+        const res = await get(`/v1/spec-key/by/spu/${spuId}`)
         return res
     }
 }
