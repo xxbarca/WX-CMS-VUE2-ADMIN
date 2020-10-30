@@ -7,6 +7,7 @@ import spuConfig from './spu'
 import activityConfig from './activity'
 import themeConfig from './theme'
 import skuConfig from './sku'
+import specRouter from './spec'
 import Utils from '@/lin/util/util'
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -57,7 +58,8 @@ let homeRouter = [
     spuConfig,
     activityConfig,
     themeConfig,
-    skuConfig
+    skuConfig,
+    specRouter
 ]
 
 const plugins = [...pluginsConfig]
