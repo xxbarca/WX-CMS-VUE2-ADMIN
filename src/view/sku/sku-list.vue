@@ -83,7 +83,22 @@
 		methods: {
             addSku() {},
             handleEdit() {},
-            handleDelete() {},
+            handleDelete(val) {
+                this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    const res = await Sku.deleteSku(val.id)
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        await this.getSkus()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    }
+                })
+            },
 			async handleCurrentChange(val) {
                 this.imgSrcList = []
                 this.currentPage = val
