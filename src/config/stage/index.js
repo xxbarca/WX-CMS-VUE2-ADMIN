@@ -6,6 +6,7 @@ import bannerConfig from './banner'
 import spuConfig from './spu'
 import activityConfig from './activity'
 import themeConfig from './theme'
+import skuConfig from './sku'
 import Utils from '@/lin/util/util'
 
 // eslint-disable-next-line import/no-mutable-exports
@@ -55,7 +56,8 @@ let homeRouter = [
     bannerConfig,
     spuConfig,
     activityConfig,
-    themeConfig
+    themeConfig,
+    skuConfig
 ]
 
 const plugins = [...pluginsConfig]
