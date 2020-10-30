@@ -57,7 +57,35 @@
         },
         methods: {
             handleDetail() {},
-            handleDelete() {},
+            handleDelete(val) {
+                let res
+                this.$confirm('此操作将永久删除该规格名，是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    try {
+                        this.loading = true
+                        res = await SpecKey.deleteSpecKey(val.id)
+                    } catch (e) {
+                        this.loading = false
+                    }
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        this.loading = false
+                        if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
+                            this.currentPage--
+                        }
+                        await this.getSpecKeys()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    } else {
+                        this.loading = false
+                        this.$message.error(`${res.message}`)
+                    }
+                })
+            },
             async handleCurrentChange(val) {
                 this.imgSrcList = []
                 this.currentPage = val
@@ -71,7 +99,6 @@
                 this.tableData = specKeys.items
                 this.totalNums = specKeys.total
                 this.loading = false
-
             },
 		}
     }
