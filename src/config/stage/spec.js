@@ -25,6 +25,14 @@ const specRouter = {
             inNav: true,
             icon: 'iconfont icon-tushuguanli',
         },
+        {
+            title: '规格值详情',
+            type: 'view',
+            name: 'spceKeyValue',
+            route: '/spec/key/value/:id',
+            filePath: 'view/spec/spec-key-value.vue',
+            icon: '',
+        },
     ],
     
 }

@@ -15,7 +15,7 @@
 				<el-table-column fixed="right" label="操作" prop="address" width="180">
 					<template slot-scope="scope">
 						<el-button plain @click="handleDetail(scope.row)" type="primary" size="mini">查看</el-button>
-						<el-button plain @click="handleOnDelete(scope.row)"type="danger" size="mini">删除</el-button>
+						<el-button plain @click="handleOnDelete(scope.row)" type="danger" size="mini">删除</el-button>
 					</template>
 				</el-table-column>
 			</el-table>

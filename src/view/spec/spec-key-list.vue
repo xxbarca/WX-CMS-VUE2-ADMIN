@@ -56,7 +56,9 @@
             await this.getSpecKeys()
         },
         methods: {
-            handleDetail() {},
+            handleDetail(val) {
+                this.$router.push({ path: `/spec/key/value/${val.id}` })
+			},
             handleDelete(val) {
                 let res
                 this.$confirm('此操作将永久删除该规格名，是否继续？', '提示', {
