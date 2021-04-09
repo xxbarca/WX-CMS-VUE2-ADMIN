@@ -143,8 +143,10 @@
 				this.specValueId = 0
 				this.dialogFormVisible = true
 			},
-            handleEdit() {
-
+            handleEdit(row) {
+                this.isCreate = false
+                this.specValueId = row.id
+                this.dialogFormVisible = true
 			},
             async handleDelete(row) {
                 this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
