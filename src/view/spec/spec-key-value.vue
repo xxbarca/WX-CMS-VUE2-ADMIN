@@ -85,6 +85,7 @@
 <script>
     import SpecKey from '../../model/SpecKey'
     import SpecValueEdit from './spec-value-edit'
+    import SpecValue from '../../model/SpecValue'
 
     export default {
         name: 'spec-key-value',
@@ -142,8 +143,25 @@
 				this.specValueId = 0
 				this.dialogFormVisible = true
 			},
-            handleEdit() {},
-            handleDelete() {},
+            handleEdit() {
+
+			},
+            async handleDelete(row) {
+                this.$confirm('此操作将永久删除该项, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    const res = await SpecValue.deleteSpecValue(row.id)
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        await this.getDetail()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    }
+                })
+			},
             dialogClose() {
                 this.dialogFormVisible = false
                 this.loading = true
