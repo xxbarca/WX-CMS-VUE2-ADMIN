@@ -48,19 +48,49 @@
 						>
 					</div>
 					<el-divider></el-divider>
+					<el-table stripe v-loading="loading" :data="tableData">
+						<el-table-column prop="id" label="id" width="150"></el-table-column>
+						<el-table-column prop="value" label="规格值名称" width="150"></el-table-column>
+						<el-table-column :show-overflow-tooltip="true" prop="extend" min-width="200" label="扩展"></el-table-column>
+						<el-table-column width="150" fixed="right" label="操作">
+							<template slot-scope="scope">
+								<el-button @click.prevent="handleEdit(scope.row)" type="primary" plain size="mini">编辑</el-button>
+								<el-button
+										@click.prevent="handleDelete(scope.row)"
+										v-permission="{ permission: ['删除规格值'], type: 'disabled' }"
+										type="danger"
+										size="mini"
+										plain
+								>删除</el-button
+								>
+							</template>
+						</el-table-column>
+					</el-table>
 
 				</el-col>
 			</el-row>
 		</div>
+		<!--  创建/编辑规格值弹窗  -->
+		<spec-value-edit
+				v-if="dialogFormVisible"
+				:isCreate="isCreate"
+				:dialog-form-visible="dialogFormVisible"
+				:spec-value-id="specValueId"
+				:spec-id="id"
+				@dialogClose="dialogClose"
+		></spec-value-edit>
 	</div>
 </template>
 
 <script>
     import SpecKey from '../../model/SpecKey'
+    import SpecValueEdit from './spec-value-edit'
 
     export default {
         name: 'spec-key-value',
-		components: {},
+		components: {
+            SpecValueEdit
+		},
 		data() {
             return {
                 tableData: [],
@@ -104,7 +134,22 @@
 				    this.$message.success(`${res.message}`)
 				}
 			},
-            resetForm() {}
+            resetForm(formName) {
+                this.$refs[formName].resetFields()
+			},
+            handleAdd() {
+			    this.isCreate = true
+				this.specValueId = 0
+				this.dialogFormVisible = true
+			},
+            handleEdit() {},
+            handleDelete() {},
+            dialogClose() {
+                this.dialogFormVisible = false
+                this.loading = true
+                this.getDetail()
+                this.loading = false
+			}
 		}
 
     }
