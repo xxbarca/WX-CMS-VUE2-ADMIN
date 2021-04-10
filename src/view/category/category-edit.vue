@@ -87,6 +87,14 @@
                 },
             }
 		},
+		async mounted() {
+            if (!this.isCreate) {
+                const res = await Category.getCategory(this.categoryId)
+                this.form = res
+                this.display = res.online === 1
+                this.initData = [{ display: res.img }]
+            }
+		},
 		methods: {
             handleClose(done) {
                 done()

@@ -119,8 +119,41 @@
                 this.isCreate = true
 			},
             handleSubList(row) {},
-            handleEdit(row) {},
-            handleDelete(row) {},
+            handleEdit(val) {
+                this.categoryId = val.id
+                this.isCreate = false
+                this.dialogFormVisible = true
+			},
+            async handleDelete(row) {
+                let res
+                this.$confirm('此操作将永久删除该分类，是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    try {
+                        this.loading = true
+                        res = await Category.deleteCategory(val.id)
+                    } catch (e) {
+                        this.loading = false
+                        console.error(e)
+                    }
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        this.loading = false
+                        if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
+                            this.currentPage--
+                        }
+                        await this.getCategories()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    } else {
+                        this.loading = false
+                        this.$message.error(`${res.message}`)
+                    }
+                })
+			},
             handleCurrentChange() {},
             initImgSrcList() {
                 this.tableData.forEach(item => {
