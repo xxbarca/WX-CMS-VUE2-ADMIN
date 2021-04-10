@@ -9,6 +9,7 @@ import themeConfig from './theme'
 import skuConfig from './sku'
 import specRouter from './spec'
 import Utils from '@/lin/util/util'
+import categoryRouter from './category'
 
 // eslint-disable-next-line import/no-mutable-exports
 let homeRouter = [
@@ -55,11 +56,12 @@ let homeRouter = [
   adminConfig,
     sleeveConfig,
     bannerConfig,
+    skuConfig,
     spuConfig,
     activityConfig,
     themeConfig,
-    skuConfig,
-    specRouter
+    specRouter,
+    categoryRouter
 ]
 
 const plugins = [...pluginsConfig]
