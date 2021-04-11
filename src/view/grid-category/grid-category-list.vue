@@ -91,12 +91,49 @@
                 this.getGridCategories()
 			},
             handleEdit() {},
-            handleDelete() {},
+            async handleDelete(val) {
+                let res
+                this.$confirm('此操作将永久删除该六宫格，是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    try {
+                        this.loading = true
+                        res = await GridCategory.deleteGridCategory(val.id)
+                    } catch (e) {
+                        this.loading = false
+                    }
+
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        this.loading = false
+                        if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
+                            this.currentPage--
+                        }
+                        await this.getGridCategories()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    } else {
+                        this.loading = false
+                        this.$message.error(`${res.message}`)
+                    }
+                })
+			},
             async getGridCategories() {
                 const gridCategories = await GridCategory.getGridCategories()
                 this.loading = false
                 this.tableData = gridCategories
-                // this.initImgSrcList()
+                this.initImgSrcList()
+            },
+            initImgSrcList() {
+                this.tableData.forEach(item => {
+                    if (!item.img) {
+                        return
+                    }
+                    this.imgSrcList.push(item.img)
+                })
             },
 		}
     }
