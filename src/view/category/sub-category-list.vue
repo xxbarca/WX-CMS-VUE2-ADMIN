@@ -117,7 +117,11 @@
                 this.loading = true
                 this.getSubCategories()
 			},
-            handleEdit() {},
+            handleEdit(val) {
+                this.subCategoryId = val.id
+                this.isCreate = false
+                this.dialogFormVisible = true
+			},
             async handleDelete(val) {
                 let res
                 this.$confirm('此操作将永久删除该分类，是否继续？', '提示', {
