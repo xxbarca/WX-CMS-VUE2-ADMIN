@@ -34,8 +34,7 @@
 							plain
 							size="mini"
 							v-permission="{ permission: '删除分类', type: 'disabled' }"
-					>删除</el-button
-					>
+					>删除</el-button>
 				</template>
 			</el-table-column>
 		</el-table>
@@ -119,7 +118,35 @@
                 this.getSubCategories()
 			},
             handleEdit() {},
-            handleDelete() {},
+            async handleDelete(val) {
+                let res
+                this.$confirm('此操作将永久删除该分类，是否继续？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning',
+                }).then(async () => {
+                    try {
+                        this.loading = true
+                        res = await Category.deleteCategory(val.id)
+                    } catch (e) {
+                        this.loading = false
+                    }
+                    if (res.code < window.MAX_SUCCESS_CODE) {
+                        this.loading = false
+                        if (this.totalNums % this.pageCount === 1 && this.currentPage !== 1) {
+                            this.currentPage--
+                        }
+                        await this.getSubCategories()
+                        this.$message({
+                            type: 'success',
+                            message: `${res.message}`,
+                        })
+                    } else {
+                        this.loading = false
+                        this.$message.error(`${res.message}`)
+                    }
+                })
+			},
             handleCurrentChange() {},
             async getSubCategories() {
                 const page = this.currentPage - 1
