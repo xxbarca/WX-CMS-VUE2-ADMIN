@@ -94,6 +94,13 @@
                 this.display = res.online === 1
                 this.initData = [{ display: res.img }]
             }
+            if (this.isSub) {
+                this.form.parent_id = this.$route.params.id
+                this.form.is_root = 0
+            } else {
+                this.form.parent_id = null
+                this.form.is_root = 1
+            }
 		},
 		methods: {
             handleClose(done) {
@@ -104,6 +111,7 @@
                 await this.getValue()
 				const form = {...this.form}
 				let result
+				// form.parent_id = this.parentId
 				if (this.isCreate) {
 				    result = await Category.addCategory(form)
 				} else {

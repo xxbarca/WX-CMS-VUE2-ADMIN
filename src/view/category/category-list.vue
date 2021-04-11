@@ -118,7 +118,12 @@
                 this.dialogFormVisible = true
                 this.isCreate = true
 			},
-            handleSubList(row) {},
+            handleSubList(row) {
+                this.$router.push({
+                    path: `/sub-category/${row.id}/list`,
+                    query: { categoryName: row.name },
+                })
+			},
             handleEdit(val) {
                 this.categoryId = val.id
                 this.isCreate = false
