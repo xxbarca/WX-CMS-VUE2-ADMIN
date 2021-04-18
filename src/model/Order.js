@@ -1,9 +1,8 @@
 import { post, get, put, _delete } from '@/lin/plugin/axios'
 
 class Order {
-    static async getOrderList(id) {
-        const res = await get(`/v1/order/page`)
-        return res
+    static async getOrderList(data) {
+        return await post(`/v1/order/page`, data)
     }
 }
 
