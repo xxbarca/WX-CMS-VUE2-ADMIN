@@ -8,6 +8,7 @@ module.exports = {
   lintOnSave: false,
   productionSourceMap: false,
   // assetsDir: 'static',
+    baseUrl: "./",
   chainWebpack: config => {
     config.resolve.alias
       .set('@', resolve('src'))

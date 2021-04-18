@@ -11,6 +11,7 @@ import specRouter from './spec'
 import Utils from '@/lin/util/util'
 import categoryRouter from './category'
 import gridCategoryRouter from './grid-category'
+import orderRouter from './order'
 
 // eslint-disable-next-line import/no-mutable-exports
 let homeRouter = [
@@ -24,17 +25,17 @@ let homeRouter = [
     icon: 'iconfont icon-iconset0103',
     order: 1,
   },
-  {
-    title: '日志管理',
-    type: 'view',
-    name: Symbol('log'),
-    route: '/log',
-    filePath: 'view/log/log.vue',
-    inNav: true,
-    icon: 'iconfont icon-rizhiguanli',
-    order: 2,
-    permission: ['查询所有日志'],
-  },
+  // {
+  //   title: '日志管理',
+  //   type: 'view',
+  //   name: Symbol('log'),
+  //   route: '/log',
+  //   filePath: 'view/log/log.vue',
+  //   inNav: true,
+  //   icon: 'iconfont icon-rizhiguanli',
+  //   order: 2,
+  //   permission: ['查询所有日志'],
+  // },
   {
     title: '个人中心',
     type: 'view',
@@ -53,8 +54,8 @@ let homeRouter = [
     inNav: false,
     icon: 'iconfont icon-rizhiguanli',
   },
-  bookConfig,
-  adminConfig,
+  // bookConfig,
+  // adminConfig,
     sleeveConfig,
     bannerConfig,
     skuConfig,
@@ -63,11 +64,13 @@ let homeRouter = [
     themeConfig,
     specRouter,
     categoryRouter,
-    gridCategoryRouter
+    gridCategoryRouter,
+    orderRouter
     
 ]
 
-const plugins = [...pluginsConfig]
+// const plugins = [...pluginsConfig]
+const plugins = []
 
 // 筛除已经被添加的插件
 function filterPlugin(data) {
